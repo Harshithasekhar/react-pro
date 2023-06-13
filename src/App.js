@@ -1,25 +1,72 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react'
+import  Axios  from 'axios'
+import"./App.css"
+const App = () => {
+   let[users,setUsers]=useState([])
+   let[user,setUser]=useState({})
 
-function App() {
+  useEffect(()=>{
+        Axios.get('https://jsonplaceholder.typicode.com/users').then(res=>setUsers(res.data)) 
+          
+  },[])
+
+  let userdetails=(a)=>{
+    setUser(a)
+  }
+
+  let deleteuser=(a)=>{
+    setUsers(users.filter(e=>e.id !==a.id))
+  }
+
+  
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    
+    <div  className='table-container'>
+    {console.log(users)}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Usename</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th colspan={2}> Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {
+                users.map((a)=>{
+                    return(
+                    <tr key={a.id}>
+                        <td>{a.id}</td>
+                        <td>{a.name}</td>
+                        <td>{a.email}</td>
+                        <td>{a.phone}</td>
+                        <td><button onClick={()=>userdetails(a)}>Details</button></td>
+                        <td><button onClick={()=>deleteuser(a)}>Delete</button></td>
+
+                    </tr>
+                    )
+                     })}
+            
+        </tbody>
+    </table>
+
+    <div>
+        {
+            user&&(
+                <>
+                <h3>{user.name}</h3>
+                <h4>{user.email}</h4>
+                </>
+            )
+        }
     </div>
-  );
+    
+    </div>
+  )
 }
 
-export default App;
+export default App
